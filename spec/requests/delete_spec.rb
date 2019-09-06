@@ -34,9 +34,10 @@ RSpec.describe Api, type: :request do
         response
       end
 
-      context 'params ' do
+      context 'params has only user_id ' do
         it 'return status 200' do
           subject
+          binding.pry
           expect(response.status).to eq 200
         end
 

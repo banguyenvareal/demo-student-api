@@ -12,7 +12,11 @@ class Api < Grape::API
 
   helpers do
     def delete_student_with_user_id(user_id, student)
-      student.destroy! if user_id.to_i == student.user_id
+      if user_id.to_i == student.user_id
+        student.destroy!
+      else
+        status 400
+      end
     end
 
     def update_student(student, new_name)
@@ -20,7 +24,11 @@ class Api < Grape::API
     end
 
     def update_student_with_user_id(student, user_id, new_name)
-      return student.update({ name: new_name }) if user_id.to_i == student.user_id
+      if user_id.to_i == student.user_id
+        return student.update({ name: new_name })
+      else
+        status 400
+      end
     end
   end
 
@@ -72,7 +80,11 @@ class Api < Grape::API
          delete_student_with_user_id(params[:user_id], student)
 
       elsif params.has_key?(:is_admin)
-        student.destroy! if params[:is_admin] == "true"
+        if params[:is_admin] == "true"
+          student.destroy!
+        else
+          status 404
+        end
       end
     end
 
@@ -111,7 +123,11 @@ class Api < Grape::API
         end
 
       elsif params.has_key?(:is_admin)
-        student if update_student(student, params[:name])
+        if params[:is_admin] == "true"
+          student if update_student(student, params[:name])
+        else
+          status 400
+        end
       end
     end
 
